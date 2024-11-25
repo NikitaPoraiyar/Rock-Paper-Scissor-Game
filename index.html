@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rock Paper Scissor</title>
+    <style>
+        *{
+            /* background-color: #8CC461; */
+            padding: 0;
+            margin: 0;
+            align-items: center;
+            font-family: Roboto;
+            
+        }
+        body{
+            background-color: #89C15E;
+            /* #89C15E */
+            /* #8CC461 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+        }
+        .main_container{
+            width: 60%;
+        }
+        
+        .top_container{
+            display: flex;
+            justify-content: space-between;
+            border: solid #fff ;
+            padding: 1em;
+            /* margin: 1em; */
+            border-radius: 1em;
+            margin-top: 5%;
+            width: 56vw;
+        }
+        .game_name{
+            color: #fff;
+            /* font-family: Roboto; */
+            letter-spacing: 0.1em;
+            font-size: 1.3em;
+
+        }
+        .score_container{
+            display: flex;
+            justify-content: flex-end;
+            gap: 1em;
+            width: 50%;
+            height: 15vh;
+            /* margin-left: 6em; */
+            
+            
+
+        }
+        .computer_score, .player_score{
+            background-color: #fff;
+            /* width: 45%; */
+            width: 10vw;
+            height: 15vh;
+            text-align: center;
+            border-radius: 0.5em;
+            padding: 0.6em;
+
+        }
+
+        .middle-container{
+            display: flex;
+            /* flex-direction: row; */
+            justify-content:center;
+            /* flex-wrap: wrap; */
+            /* margin-left: 12em; */
+            align-items: center;
+            /* width: 80vw; */
+            
+
+        }
+        .btn{
+            border:none;
+            width: 17vh;
+            height: 17vh;
+            border-radius: 50%;
+            border: solid 1em;
+            /* margin: 1em; */
+            position: absolute;
+
+        }
+        .line1{
+            height: 18em;
+            width: 1em;
+            background-color: #000000a0;
+            transform: rotate(-28deg);
+            z-index: 1;
+            margin-top: 10em;
+            margin-right: 9em;
+            margin-left: 0.5em;
+            position: fixed;
+        }
+        .line2{
+            height: 17em;
+            width: 1em;
+            background-color: #000000a0;
+            transform: rotate(30deg);
+            z-index: 1;
+            margin-left: 4em;
+            margin-top: 10em;
+            position: fixed;
+        }
+        .line3{
+            height: 21.5em;
+            /* height: 21.5em; */
+            width: 1em;
+            background-color: #000000a0;
+            transform: rotate(90deg);
+            z-index: 1;
+            margin-bottom: 7em;
+            margin-left: 2.9em;
+        }
+        #btn-rock{
+            border-color: rgb(59, 116, 222);
+            margin-bottom: 10em;
+            z-index: 2;
+            margin-right: 20em;
+        }
+        #btn-paper{
+            border-color: rgb(238, 193, 44);
+            /* margin-right: 10em; */
+            margin-top: 25em;
+            z-index: 2;
+            margin-right: 1.5em;
+            
+        }
+        #btn-scissors{
+            border-color: rgb(177, 62, 177);
+            /* margin-left: 30px; */
+            margin-bottom: 10em;
+            /* margin-right: 1.5em; */
+            z-index: 2;
+            margin-left: 21em;
+        }
+
+        
+        .bottom-container{
+            display: flex;
+            flex-direction: column;
+            /* align-items: flex-end; */
+            /* float: right; */
+            /* padding-top: 3em; */
+            /* width: 100%; */
+            /* margin-left: auto; */
+        }
+        #close_button{
+            display: none;
+            z-index: 15;
+            background-color: red;
+            color: #fff;
+            border: #fff solid 0.3em;
+            border-radius: 5em;
+            width: 70px;
+            height: 70px;
+            position: absolute;
+            right: 0.5px;
+            bottom: 400px;
+            font-weight: bold;
+            font-size: 25px;
+            justify-content: center;
+            position: fixed;
+        }
+        .rules-container{
+            display: none;
+            /* display: flex; */
+            flex-direction: column;
+            justify-content: space-between;
+            color: #fff;
+            background-color: rgb(0, 87, 0);
+            border: solid #fff 0.6em;
+            border-radius: 1em;
+            padding: 2em;
+            position: fixed;
+            right: 7px;
+            top: 290px;
+            height: 18em;
+            width: 16em;
+            z-index: 10;
+            margin: 0.5em;     
+        }
+        .rules-container-top{
+            /* padding-bottom: 1em; */
+            text-align: center;
+            position: fixed;
+            right: 100px;
+            top: 320px;
+            
+        }
+        .rules-container-bottom {
+            position: fixed;
+            right: 50px;
+            top: 380px;
+            z-index: 1;
+        }
+        .rules-container-bottom > ul >  li::marker{
+            color: yellow;
+            /* font-size: 1.5em; */
+        }
+        .rules-container-bottom > ul{
+            list-style-type: square;
+        }
+
+        #rules-btn{
+            border: #ffff solid;
+            border-width: 2px;
+            background-color: #8CC461;
+            border-radius: 0.5em;
+            width: 9.5vw;
+            height: 5vh;
+            color: #fff;
+            letter-spacing: 0.1em;
+            font-size: 100%;
+            position: fixed;
+            bottom: 10px;
+            right: 20px;
+        }
+        #middle_container{
+            min-height: 400px;
+        }
+
+        @keyframes winning_player{
+            0%{
+                transform: scale(1);
+            }
+            50%{
+                transform: scale(1.2);
+            }
+            100%{
+                transform:scale(1);
+            }
+        }
+        .win{
+            animation: winning_player 5s ease-in-out;
+        }
+
+        @keyframes finalEffect{
+            0%{
+                transform: scale(0.1);
+            }
+            100%{
+                transform: scale(1);
+            }
+        }
+
+        .final-effect{
+            animation: finalEffect 2s ;
+        }
+
+
+    </style>
+</head>
+<body>
+    <div class="main_container">
+
+        <div class="top_container">
+            <div class="game_name">
+                <h1>ROCK</h1>
+                <h1>PAPER</h1>
+                <h1>SCISSORS</h1>
+            </div>
+            <diV class="score_container">
+                <div class="computer_score">
+                    <h4>COMPUTER <br>SCORE</h4>
+                    <h1 style="font-size: 4em;">0</h1>
+                </div>
+                <div class="player_score">
+                    <h4>YOUR <br>SCORE</h4>
+                    <h1 style="font-size: 4em;">0</h1>
+                </div>
+            </diV>
+        </div>
+
+        <div class="middle-bottom-container">
+            <div class="middle-container" id="middle_container">
+                <button type="button" class="btn btn-rock" id="btn-rock">
+                    <img src="./images/icons8-fist-67 1.png" alt="Rock">
+                </button>
+                <div class="line1"></div>
+                <div class="line3"></div>
+                <button type="button" class="btn btn-paper" id="btn-paper">
+                    <img src="./images/paper.png" alt="Paper">
+                </button>
+                <div class="line2"></div>
+                <button type="button" class="btn btn-scissors" id="btn-scissors">
+                    <img src="./images/scissors.png" alt="Scissors">
+                </button>
+            </div>
+    
+            <div class="bottom-container">
+                <button type="button" id="close_button">X</button>
+                <div class="rules-container" id="rules_container">
+                    <div class="rules-container-top">
+                        <h1>Game Rules</h1>
+                    </div>
+                    <div class="rules-container-bottom">
+                        <ul>
+                            <li>Rock beats scissors, scissors beat <br>
+                                paper, and paper beats rock.</li>
+                            <br>
+                            <li>Agree ahead of time whether you'll <br>
+                                count off “rock, paper, scissors, <br>
+                                shoot” or just “rock, paper, scissors.”</li>
+                            <br>
+                            <li>Use rock, paper, scissors to settle <br>
+                                minor decisions or simply play to <br>
+                                pass the time</li>
+                            <br>
+                            <li>If both players lay down the same <br>
+                                hand, each player lays down <br>
+                                another hand</li>
+                        </ul>
+                    </div>
+                </div>
+                <br>
+                <button type="button" id="rules-btn"><b>RULES</b></button>
+            </div>
+        </div>
+        
+    </div>
+
+
+    <script>
+        var rules_btn = document.getElementById("rules-btn");
+        var rules = document.getElementById("rules_container");
+        var close_btn = document.getElementById("close_button");
+        var middle_container = document.getElementById("middle_container");
+
+        //Rules
+        rules.style.display = 'none';
+        close_btn.style.display = 'none'
+        rules_btn.addEventListener("click", ()=>{
+                rules.style.display = 'flex';
+                close_btn.style.display = 'flex';
+        });
+        close_btn.addEventListener("click", ()=>{
+            rules.style.display = 'none';
+            close_btn.style.display = 'none';
+        });
+
+        //main game
+        function computers_move(){
+            var moves = ['rock','paper','scissors']
+            var random = Math.floor(Math.random()*3);
+            return moves[random];
+        };
+
+
+        function buttonMove(move){
+            switch(move){
+                case 'rock':
+                    return `<img src="./images/icons8-fist-67 1.png" alt="Rock">`
+                case 'paper':
+                    return `<img src="./images/paper.png" alt="Paper">`
+                case 'scissors':
+                    return `<img src="./images/scissors.png" alt="Scissors">`
+                default:
+                    return '';
+            }
+        }
+
+        var playersScore= localStorage.getItem("playersScore") ? parseInt(localStorage.getItem("playersScore")) :0;
+        var computersScore=localStorage.getItem("computersScore") ? parseInt(localStorage.getItem("computersScore")) :0;
+        var countOfMoves = localStorage.getItem("countOfMoves") ? parseInt(localStorage.getItem("countOfMoves")) :0;
+
+        document.querySelector('.player_score h1').innerHTML = `${playersScore}`;
+        document.querySelector('.computer_score h1').innerHTML = `${computersScore}`
+        
+        function updatingLocalStorage(){
+            localStorage.setItem('playersScore',playersScore)
+            localStorage.setItem('computersScore',computersScore)
+            localStorage.setItem('countOfMoves',countOfMoves)
+        }
+
+        
+
+        function finalResult(){
+            var message = ''
+            var finalMessage = ''
+            var finalImage = ''
+            var finalImage1 = ''
+            
+
+            if(playersScore>computersScore){
+                message = 'Hurray!!'
+                finalMessage = 'YOU WON THE GAME'
+                // finalImage = './images/trophy.png'
+                // finalImage1 = './images/backgroundStars.png';
+                finalImage = './images/final-win.png'
+                
+            }
+            else if(playersScore<computersScore){
+                message = "OH!, Try again"
+                finalMessage = "YOU LOST THE GAME"
+                finalImage ='./images/duck-unscreen.gif'
+
+            }
+            else{
+                message = "It is a Tie!"
+                finalMessage = "YOU AND THE PC HAVE THE SAME SCORE"
+                finalImage = './images/smile-emoji.gif'
+            }
+
+            // finalImage1.style.margin = '20px'
+
+            document.body.innerHTML = `
+            <div style="display:flex; flex-direction:column">
+                <div id="finalImageAnimation" style="margin-top:85px;">
+                    <img src="${finalImage}" style="margin-left:50px;z-index=2;position">
+                    <img src="${finalImage1}" style="margin-right:20px;z-index:1">
+                </div>
+                <div style="margin-top:85px; color:#ffff">
+                    <br>
+                    <h1 style="padding-left:40px">${message}</h1>
+                    <br>
+                    <h3 style="padding-left:20px; margin-left:10px">${finalMessage}</h3>
+                </div>
+                <br><br>
+                <div>
+                    <button id="restart-btn" onclick="clearScores()">Play Again</button>
+                </div>
+                
+            </div>
+            `
+
+            var celebrateimage = document.getElementById("finalImageAnimation")
+            celebrateimage.classList.add("final-effect")
+
+            // document.getElementById("restart-btn").addEventListener("click",()=>{
+            //     clearScores()
+            // })
+            // clearScores()
+        }
+
+        function clearScores(){
+            localStorage.clear()
+            playersScore = 0
+            computersScore = 0
+            countOfMoves  = 0
+            refreshGame()
+        }
+
+        function refreshGame(){
+            playersScore = 0
+            computersScore = 0
+            countOfMoves = 0
+
+            localStorage.setItem("playersScore",0)
+            localStorage.setItem("computersScore",0)
+            localStorage.setItem("countOfMoves",0)
+
+            var playerScore = document.querySelector('.player_score h1')
+            var computerScore = document.querySelector('.computer_score h1')
+            if(playerScore){
+                playerScore.innerHTML = "0";
+            }
+            if(computerScore){
+                computerScore.innerHTML = "0"
+            }
+            
+            Gamereset()
+        }
+
+        function computer_display(selectedButton,playersmove){
+            var computersButton = buttonMove(selectedButton)
+            var playersButton = buttonMove(playersmove)
+            var Message1 = " ";
+            var Message2 = " ";
+            var winner = ""
+
+            if(playersmove === selectedButton){
+                Message1 = "TIE UP"
+            }
+            else if((playersmove === "rock" && selectedButton === "scissors") ||
+                    (playersmove === "paper" && selectedButton === "rock") ||
+                    (playersmove === "scissors" && selectedButton === "paper") )
+            {
+                Message1 = "YOU WIN"
+                Message2 = "AGAINST PC"
+                playersScore++;
+                winner = "player"
+            }
+            else{
+                Message1 = "YOU LOST"
+                Message2 = "AGAINST PC"
+                computersScore++;
+                winner = "PC"
+            }
+            
+
+            var PScore = document.querySelector('.player_score h1')
+            PScore.innerHTML = `${playersScore}`
+
+            var CScore = document.querySelector('.computer_score h1')
+            CScore.innerHTML = `${computersScore}`
+
+            countOfMoves++;
+            if(countOfMoves >30){
+                // finalMove()
+                finalResult()
+                return
+            }
+
+            updatingLocalStorage();
+
+            middle_container.innerHTML= `
+                <div style="display: flex; color: #fff; justify-content: center; align-items: center; flex-direction: column;">
+                    <div style="display: flex;gap:8em; width: 100%; margin-top: 120px;">
+                        <div>
+                            <h3 style="margin-left:40px;position:fixed;">You Picked: </h3>
+                            <div id="player-outer">
+                                <div id="player-middle">
+                                    <div id="player-bottom">
+                                        <div id="player-button" >
+                                            ${playersButton}
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                        <div style="">
+                            <h1>${Message1}</h1>
+                            <h3> ${Message2}</h3>
+                            <br>
+                            <button onclick="Gamereset()" style="padding: 10px 20px; font-size: 16px; border-radius:0.5em; border:none">Play Again</button>
+                        </div>
+                        <div>
+                            <h3 style="position:fixed;">Computer Picked: </h3>
+                            <div id="PC-outer">
+                                <div id="PC-middle">
+                                    <div id="PC-bottom">
+                                        <div id="computer-button">
+                                            ${computersButton}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>`;
+
+            styleButton("player-button", playersmove);
+            styleButton("computer-button", selectedButton);
+
+            if(winner === 'player'){
+                var main_button = document.getElementById("player-button")
+                main_button.style.zIndex = '4'
+                main_button.style.position = 'relative'
+
+                var winner_layer1 = document.getElementById("player-outer")
+                winner_layer1.classList.add('win')
+                winner_layer1.style.width = '35vh'
+                winner_layer1.style.height = '35vh'
+                winner_layer1.style.borderRadius = '50%'
+                winner_layer1.style.display = 'flex'
+                winner_layer1.style.justifyContent = 'center'
+                winner_layer1.style.backgroundColor = '#66B248'
+
+                var winner_layer2 = document.getElementById("player-middle")
+                winner_layer2.classList.add('win')
+                winner_layer2.style.width = '30vh'
+                winner_layer2.style.height = '30vh'
+                winner_layer2.style.display = 'flex'
+                winner_layer2.style.justifyContent = 'center'
+                winner_layer2.style.borderRadius = '50%'
+                winner_layer2.style.backgroundColor = '#32A62F'
+                // winner_layer2.style.opacity = "0.5"
+
+                var winner_layer3 = document.getElementById("player-bottom")
+                winner_layer3.classList.add('win')
+                winner_layer3.style.width = '25vh'
+                winner_layer3.style.height = '25vh'
+                winner_layer3.style.borderRadius = '50%'
+                winner_layer3.style.backgroundColor = "#279B27"
+
+                // document.getElementById("player-middle").style.backgroundColor = '#279B27'
+                // document.getElementById("player-bottom").style.backgroundColor = '#279B27'
+
+            }
+            else if(winner === 'PC'){
+                var main_button = document.getElementById("computer-button")
+                main_button.style.zIndex = '4'
+                main_button.style.position = 'relative'
+
+                var winner_layer1 = document.getElementById("PC-outer")
+                winner_layer1.classList.add('win')
+                winner_layer1.style.width = '35vh'
+                winner_layer1.style.height = '35vh'
+                winner_layer1.style.borderRadius = '50%'
+                winner_layer1.style.display = 'flex'
+                winner_layer1.style.justifyContent = 'center'
+                winner_layer1.style.backgroundColor = '#66B248'
+
+                var winner_layer2 = document.getElementById("PC-middle")
+                winner_layer2.classList.add('win')
+                winner_layer2.style.width = '30vh'
+                winner_layer2.style.height = '30vh'
+                winner_layer2.style.display = 'flex'
+                winner_layer2.style.justifyContent = 'center'
+                winner_layer2.style.borderRadius = '50%'
+                winner_layer2.style.backgroundColor = '#32A62F'
+                // winner_layer2.style.opacity = "0.5"
+
+                var winner_layer3 = document.getElementById("PC-bottom")
+                winner_layer3.classList.add('win')
+                winner_layer3.style.width = '25vh'
+                winner_layer3.style.height = '25vh'
+                winner_layer3.style.borderRadius = '50%'
+                winner_layer3.style.backgroundColor = "#279B27"
+            }
+        }
+
+        
+
+
+
+        function styleButton(buttonId, move){
+            var element = document.getElementById(buttonId)
+            element.style.backgroundColor = "white";
+            element.style.border = "solid 1em";
+            element.style.borderRadius = '60%'
+            element.style.width = '12vh';
+            element.style.height = '12vh';
+            element.style.padding = '12px';
+            element.style.margin= '20px';
+
+            switch(move){
+                case "rock":
+                    element.style.borderColor = "rgb(59, 116, 222)"
+                    break;
+                case "paper":
+                    element.style.borderColor = "rgb(238, 193, 44)"
+                    break;
+                case "scissors":
+                    element.style.borderColor = "rgb(177, 62, 177)"
+                    break;
+                
+            }
+        }
+        
+
+        function checkingResult(playersmove,computersmove){
+            if(playersmove===computersmove){
+                return "TIE"
+            }
+            else if((playersmove === "rock" && computersmove === "scissors") ||
+                    (playersmove === "paper" && computersmove === "rock") ||
+                    (playersmove === "scissors" && computersmove === "paper"))
+                    {
+                        return "Win"
+                    }
+            else{
+                return "Lose"
+            }
+        }
+
+        function mainEventListeners(){
+            var moves = ['rock', 'paper', 'scissors']
+            // var originalStyle = {}
+
+            moves.forEach((move) => {
+                var button = document.getElementById(`btn-${move}`)
+
+                if(button){
+                    button.addEventListener("click",() => {
+                        var computersmove = computers_move()
+                        computer_display(computersmove,move)
+                    
+                    });
+                }
+            });
+        };
+
+        function Gamereset(){
+            middle_container.innerHTML = `
+                <button type="button" class="btn" id="btn-rock">
+                    <img src="./images/icons8-fist-67 1.png" alt="Rock">
+                </button>
+                <div class="line1"></div>
+                <div class="line3"></div>
+                <button type="button" class="btn" id="btn-paper">
+                    <img src="./images/paper.png" alt="Paper">
+                </button>
+                <div class="line2"></div>
+                <button type="button" class="btn" id="btn-scissors">
+                    <img src="./images/scissors.png" alt="Scissors">
+                </button>`;
+            
+            setTimeout(()=>{
+                mainEventListeners();
+            },0);
+            
+        }
+
+        mainEventListeners();
+
+        
+        
+    </script>
+</body>
+</html>
