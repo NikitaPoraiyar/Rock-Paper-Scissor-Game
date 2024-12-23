@@ -4,13 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rock Paper Scissor</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
     <style>
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
         *{
             /* background-color: #8CC461; */
             padding: 0;
             margin: 0;
             align-items: center;
-            font-family: Roboto;
+            font-family: "Roboto";
             
         }
         body{
@@ -231,14 +235,14 @@
                 transform: scale(1);
             }
             50%{
-                transform: scale(1.2);
+                transform: scale(1.1);
             }
             100%{
                 transform:scale(1);
             }
         }
         .win{
-            animation: winning_player 5s ease-in-out;
+            animation: winning_player 5s ease-in-out ;
         }
 
         @keyframes finalEffect{
@@ -382,17 +386,15 @@
         
 
         function finalResult(){
-            var message = ''
-            var finalMessage = ''
-            var finalImage = ''
-            var finalImage1 = ''
+            var message = '';
+            var finalMessage = '';
+            var finalImage = '';
             
 
             if(playersScore>computersScore){
                 message = 'Hurray!!'
                 finalMessage = 'YOU WON THE GAME'
                 // finalImage = './images/trophy.png'
-                // finalImage1 = './images/backgroundStars.png';
                 finalImage = './images/final-win.png'
                 
             }
@@ -408,13 +410,12 @@
                 finalImage = './images/smile-emoji.gif'
             }
 
-            // finalImage1.style.margin = '20px'
+            // const originalContent = document.body.innerHTML;
 
             document.body.innerHTML = `
             <div style="display:flex; flex-direction:column">
                 <div id="finalImageAnimation" style="margin-top:85px;">
                     <img src="${finalImage}" style="margin-left:50px;z-index=2;position">
-                    <img src="${finalImage1}" style="margin-right:20px;z-index:1">
                 </div>
                 <div style="margin-top:85px; color:#ffff">
                     <br>
@@ -424,48 +425,82 @@
                 </div>
                 <br><br>
                 <div>
-                    <button id="restart-btn" onclick="clearScores()">Play Again</button>
+                    <button id="restart-btn">Play Again</button>
                 </div>
                 
             </div>
             `
 
             var celebrateimage = document.getElementById("finalImageAnimation")
-            celebrateimage.classList.add("final-effect")
+            celebrateimage.classList.add("final-effect");
 
-            // document.getElementById("restart-btn").addEventListener("click",()=>{
-            //     clearScores()
-            // })
-            // clearScores()
+            document.getElementById("restart-btn").addEventListener("click",()=>{
+                clearScores();
+                window.location.reload();
+            });
+
         }
 
         function clearScores(){
-            localStorage.clear()
-            playersScore = 0
-            computersScore = 0
-            countOfMoves  = 0
-            refreshGame()
+            localStorage.clear();
+            playersScore = 0;
+            computersScore = 0;
+            countOfMoves  = 0;
+            // refreshGame();
+            // mainEventListeners();
+
+            var playerScore = document.querySelector('.player_score h1');
+            var computerScore = document.querySelector('.computer_score h1');
+            if(playerScore) playerScore.innerHTML = "0";
+            if(computerScore) computerScore.innerHTML = "0";
+            
+            // Reset local storage
+            localStorage.setItem("playersScore", 0);
+            localStorage.setItem("computersScore", 0);
+            localStorage.setItem("countOfMoves", 0);
         }
 
-        function refreshGame(){
-            playersScore = 0
-            computersScore = 0
-            countOfMoves = 0
+        // function refreshGame(){
+        //     playersScore = 0
+        //     computersScore = 0
+        //     countOfMoves = 0
 
-            localStorage.setItem("playersScore",0)
-            localStorage.setItem("computersScore",0)
-            localStorage.setItem("countOfMoves",0)
+        //     localStorage.setItem("playersScore",0)
+        //     localStorage.setItem("computersScore",0)
+        //     localStorage.setItem("countOfMoves",0)
 
-            var playerScore = document.querySelector('.player_score h1')
-            var computerScore = document.querySelector('.computer_score h1')
-            if(playerScore){
-                playerScore.innerHTML = "0";
-            }
-            if(computerScore){
-                computerScore.innerHTML = "0"
-            }
+        //     var playerScore = document.querySelector('.player_score h1')
+        //     var computerScore = document.querySelector('.computer_score h1')
+        //     if(playerScore){
+        //         playerScore.innerHTML = "0";
+        //     }
+        //     if(computerScore){
+        //         computerScore.innerHTML = "0"
+        //     }
             
-            Gamereset()
+        //     Gamereset();
+        //     mainEventListeners();
+        // }
+
+        function Gamereset(){
+            middle_container.innerHTML = `
+                <button type="button" class="btn" id="btn-rock">
+                    <img src="./images/icons8-fist-67 1.png" alt="Rock">
+                </button>
+                <div class="line1"></div>
+                <div class="line3"></div>
+                <button type="button" class="btn" id="btn-paper">
+                    <img src="./images/paper.png" alt="Paper">
+                </button>
+                <div class="line2"></div>
+                <button type="button" class="btn" id="btn-scissors">
+                    <img src="./images/scissors.png" alt="Scissors">
+                </button>`;
+            
+            setTimeout(()=>{
+                mainEventListeners();
+            },0);
+            
         }
 
         function computer_display(selectedButton,playersmove){
@@ -502,10 +537,11 @@
             CScore.innerHTML = `${computersScore}`
 
             countOfMoves++;
-            if(countOfMoves >30){
-                // finalMove()
-                finalResult()
-                return
+            if(countOfMoves >3){
+                // finalMove();
+                updatingLocalStorage();
+                finalResult();
+                return;
             }
 
             updatingLocalStorage();
@@ -526,11 +562,11 @@
                                 
                             </div>
                         </div>
-                        <div style="">
+                        <div style="text-align: center;">
                             <h1>${Message1}</h1>
                             <h3> ${Message2}</h3>
                             <br>
-                            <button onclick="Gamereset()" style="padding: 10px 20px; font-size: 16px; border-radius:0.5em; border:none">Play Again</button>
+                            <button onclick="playNextRound()" style="padding: 10px 20px; font-size: 16px; border-radius:0.5em; border:none">Play Again</button>
                         </div>
                         <div>
                             <h3 style="position:fixed;">Computer Picked: </h3>
@@ -551,75 +587,81 @@
             styleButton("player-button", playersmove);
             styleButton("computer-button", selectedButton);
 
-            if(winner === 'player'){
-                var main_button = document.getElementById("player-button")
-                main_button.style.zIndex = '4'
-                main_button.style.position = 'relative'
-
-                var winner_layer1 = document.getElementById("player-outer")
-                winner_layer1.classList.add('win')
-                winner_layer1.style.width = '35vh'
-                winner_layer1.style.height = '35vh'
-                winner_layer1.style.borderRadius = '50%'
-                winner_layer1.style.display = 'flex'
-                winner_layer1.style.justifyContent = 'center'
-                winner_layer1.style.backgroundColor = '#66B248'
-
-                var winner_layer2 = document.getElementById("player-middle")
-                winner_layer2.classList.add('win')
-                winner_layer2.style.width = '30vh'
-                winner_layer2.style.height = '30vh'
-                winner_layer2.style.display = 'flex'
-                winner_layer2.style.justifyContent = 'center'
-                winner_layer2.style.borderRadius = '50%'
-                winner_layer2.style.backgroundColor = '#32A62F'
-                // winner_layer2.style.opacity = "0.5"
-
-                var winner_layer3 = document.getElementById("player-bottom")
-                winner_layer3.classList.add('win')
-                winner_layer3.style.width = '25vh'
-                winner_layer3.style.height = '25vh'
-                winner_layer3.style.borderRadius = '50%'
-                winner_layer3.style.backgroundColor = "#279B27"
-
-                // document.getElementById("player-middle").style.backgroundColor = '#279B27'
-                // document.getElementById("player-bottom").style.backgroundColor = '#279B27'
-
-            }
-            else if(winner === 'PC'){
-                var main_button = document.getElementById("computer-button")
-                main_button.style.zIndex = '4'
-                main_button.style.position = 'relative'
-
-                var winner_layer1 = document.getElementById("PC-outer")
-                winner_layer1.classList.add('win')
-                winner_layer1.style.width = '35vh'
-                winner_layer1.style.height = '35vh'
-                winner_layer1.style.borderRadius = '50%'
-                winner_layer1.style.display = 'flex'
-                winner_layer1.style.justifyContent = 'center'
-                winner_layer1.style.backgroundColor = '#66B248'
-
-                var winner_layer2 = document.getElementById("PC-middle")
-                winner_layer2.classList.add('win')
-                winner_layer2.style.width = '30vh'
-                winner_layer2.style.height = '30vh'
-                winner_layer2.style.display = 'flex'
-                winner_layer2.style.justifyContent = 'center'
-                winner_layer2.style.borderRadius = '50%'
-                winner_layer2.style.backgroundColor = '#32A62F'
-                // winner_layer2.style.opacity = "0.5"
-
-                var winner_layer3 = document.getElementById("PC-bottom")
-                winner_layer3.classList.add('win')
-                winner_layer3.style.width = '25vh'
-                winner_layer3.style.height = '25vh'
-                winner_layer3.style.borderRadius = '50%'
-                winner_layer3.style.backgroundColor = "#279B27"
-            }
+            setTimeout(() => {
+                if (winner === 'player') {
+                    applyWinnerEffect('player');
+                } else if (winner === 'PC') {
+                    applyWinnerEffect('PC');
+                }
+            }, 100);
         }
 
-        
+        function playNextRound() {
+            middle_container.innerHTML = `
+                <button type="button" class="btn" id="btn-rock">
+                    <img src="./images/icons8-fist-67 1.png" alt="Rock">
+                </button>
+                <div class="line1"></div>
+                <div class="line3"></div>
+                <button type="button" class="btn" id="btn-paper">
+                    <img src="./images/paper.png" alt="Paper">
+                </button>
+                <div class="line2"></div>
+                <button type="button" class="btn" id="btn-scissors">
+                    <img src="./images/scissors.png" alt="Scissors">
+                </button>`;
+            
+            mainEventListeners();
+        }
+
+        function applyWinnerEffect(winner) {
+            const prefix = winner === 'player' ? 'player' : 'PC';
+            
+            var main_button = document.getElementById(`${prefix}-button`);
+            if (main_button) {
+                main_button.style.zIndex = '4';
+                main_button.style.position = 'relative';
+            }
+
+            // Outer circle
+            const winner_layer1 = document.getElementById(`${prefix}-outer`);
+            if (winner_layer1) {
+                winner_layer1.classList.add('win');
+                winner_layer1.style.width = '35vh';
+                winner_layer1.style.height = '35vh';
+                winner_layer1.style.borderRadius = '50%';
+                winner_layer1.style.display = 'flex';
+                winner_layer1.style.alignItems = 'center';
+                winner_layer1.style.justifyContent = 'center';
+                winner_layer1.style.backgroundColor = '#66B248';
+            }
+
+            // Middle circle
+            const winner_layer2 = document.getElementById(`${prefix}-middle`);
+            if (winner_layer2) {
+                winner_layer2.classList.add('win');
+                winner_layer2.style.width = '30vh';
+                winner_layer2.style.height = '30vh';
+                winner_layer2.style.display = 'flex';
+                winner_layer2.style.alignItems = 'center';
+                winner_layer2.style.justifyContent = 'center';
+                winner_layer2.style.borderRadius = '50%';
+                winner_layer2.style.backgroundColor = '#32A62F';
+            }
+
+            // Inner circle
+            const winner_layer3 = document.getElementById(`${prefix}-bottom`);
+            if (winner_layer3) {
+                winner_layer3.classList.add('win');
+                winner_layer3.style.width = '25vh';
+                winner_layer3.style.height = '25vh';
+                winner_layer3.style.display = 'flex';
+                winner_layer3.style.alignItems = 'center';
+                winner_layer3.style.justifyContent = 'center';
+                winner_layer3.style.borderRadius = '50%';
+                winner_layer3.style.backgroundColor = "#279B27";
+            }
+        }
 
 
 
@@ -674,32 +716,12 @@
                     button.addEventListener("click",() => {
                         var computersmove = computers_move()
                         computer_display(computersmove,move)
-                    
                     });
                 }
             });
         };
 
-        function Gamereset(){
-            middle_container.innerHTML = `
-                <button type="button" class="btn" id="btn-rock">
-                    <img src="./images/icons8-fist-67 1.png" alt="Rock">
-                </button>
-                <div class="line1"></div>
-                <div class="line3"></div>
-                <button type="button" class="btn" id="btn-paper">
-                    <img src="./images/paper.png" alt="Paper">
-                </button>
-                <div class="line2"></div>
-                <button type="button" class="btn" id="btn-scissors">
-                    <img src="./images/scissors.png" alt="Scissors">
-                </button>`;
-            
-            setTimeout(()=>{
-                mainEventListeners();
-            },0);
-            
-        }
+        
 
         mainEventListeners();
 
